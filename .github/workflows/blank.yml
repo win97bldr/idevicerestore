@@ -43,7 +43,7 @@ jobs:
         find /mingw64/bin/ -type f \( -name "idevicerestore.exe" -o -name "idevice*.exe" \) -exec cp -v {} rel \;
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: idevicerestore-windows
         path: rel
