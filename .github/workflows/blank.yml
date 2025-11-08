@@ -1,0 +1,49 @@
+name: Build idevicerestore for Windows
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - name: Install MSYS2
+      uses: msys2/setup-msys2@v2
+      with:
+        update: true
+        install: >-
+          base-devel
+          git
+          mingw-w64-x86_64-toolchain
+          mingw-w64-x86_64-cmake
+          mingw-w64-x86_64-autotools
+          mingw-w64-x86_64-pkg-config
+          mingw-w64-x86_64-openssl
+          mingw-w64-x86_64-libzip
+          mingw-w64-x86_64-libusb
+
+    - name: Clone and build dependencies
+      shell: msys2 {0}
+      run: |
+        repos=("libplist" "libimobiledevice-glue" "libusbmuxd" "libirecovery" "libtatsu" "libimobiledevice" "idevicerestore")
+        for repo in "${repos[@]}"; do
+          git clone "https://github.com/libimobiledevice/$repo"
+          cd "$repo"
+          ./autogen.sh
+          make -j$(nproc)
+          make install
+          cd ..
+        done
+
+    - name: Package binaries
+      shell: msys2 {0}
+      run: |
+        mkdir -p rel
+        find /mingw64/bin/ -type f \( -name "idevicerestore.exe" -o -name "idevice*.exe" \) -exec cp -v {} rel \;
+
+    - name: Upload artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: idevicerestore-windows
+        path: rel
