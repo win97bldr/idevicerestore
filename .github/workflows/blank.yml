@@ -29,7 +29,7 @@ jobs:
         set -e
         mkdir -p rel
         export PATH=/mingw64/bin:$PATH
-        for repo in libplist libimobiledevice-glue libusbmuxd libirecovery libimobiledevice idevicerestore; do
+        for repo in libplist libimobiledevice-glue libusbmuxd libirecovery libtatsu libimobiledevice idevicerestore; do
           git clone --depth=1 https://github.com/libimobiledevice/$repo
           cd $repo
           ./autogen.sh
