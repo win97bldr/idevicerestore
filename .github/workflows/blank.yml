@@ -38,44 +38,27 @@ jobs:
           cd ..
         done
         find /mingw64/bin/ -type f \( \
-          -name "idevice_id.exe" \
-          -o -name "ideviceinfo.exe" \
-          -o -name "idevicebackup.exe" \
-          -o -name "idevicebackup2.exe" \
-          -o -name "idevicecrashreport.exe" \
-          -o -name "idevicedate.exe" \
-          -o -name "idevicedebug.exe" \
-          -o -name "idevicediagnostics.exe" \
-          -o -name "ideviceenterrecovery.exe" \
-          -o -name "ideviceimagemounter.exe" \
-          -o -name "idevicename.exe" \
-          -o -name "idevicenotificationproxy.exe" \
-          -o -name "idevicepair.exe" \
-          -o -name "ideviceprovision.exe" \
-          -o -name "idevicescreenshot.exe" \
-          -o -name "idevicesetlocation.exe" \
-          -o -name "idevicesyslog.exe" \
-          -o -name "ideviceunpair.exe" \
-          -o -name "idevicerestore.exe" \
-          -o -name "libcurl-*.dll" \
-          -o -name "libcrypto-*.dll" \
-          -o -name "libgcc_s_seh-1.dll" \
-          -o -name "libgnutls-*.dll" \
-          -o -name "libgpg-error-0.dll" \
-          -o -name "libhogweed-*.dll" \
-          -o -name "libiconv-2.dll" \
-          -o -name "libidn2-0.dll" \
-          -o -name "libintl-8.dll" \
-          -o -name "libnettle-*.dll" \
-          -o -name "libnghttp2-*.dll" \
-          -o -name "libp11-kit-*.dll" \
-          -o -name "libpsl-5.dll" \
-          -o -name "libssl-*.dll" \
-          -o -name "libstdc++-6.dll" \
-          -o -name "libtasn1-6.dll" \
-          -o -name "libunistring-2.dll" \
-          -o -name "libusb-1.0.dll" \
-          -o -name "libwinpthread-1.dll" \
+          -name "*idevice*" -o \
+          -name "libimobiledevice*" -o \
+          -name "libplist*" -o \
+          -name "plistutil.exe" -o \
+          -name "afcclient.exe" -o \
+          -name "libusbmuxd*" -o \
+          -name "inetcat.exe" -o \
+          -name "iproxy.exe" -o \
+          -name "libtatsu*.dll" -o \
+          -name "zlib*.dll" -o \
+          -name "libbrotli*.dll" -o \
+          -name "libiconv*.dll" -o \
+          -name "libunistring*.dll" -o \
+          -name "libssh*.dll" -o \
+          -name "libintl*.dll" -o \
+          -name "libidn*.dll" -o \
+          -name "libnghttp*.dll" -o \
+          -name "libpsl*.dll" -o \
+          -name "libzstd*.dll" -o \
+          -name "libcrypto*.dll" -o \
+          -name "libssl*.dll" \
         \) -exec cp -v {} rel \;
 
     - uses: actions/upload-artifact@v4
