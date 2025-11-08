@@ -61,10 +61,10 @@ jobs:
           -name "libpsl*.dll" -o \
           -name "libzstd*.dll" -o \
           -name "libcrypto*.dll" -o \
-          -name "libssl*.dll" \
-          -name "libcur*.dll" \
-          -name "libbz*.dll" \
-          -name "liblzm*.dll" \
+          -name "libssl*.dll" -o \
+          -name "libcurl*.dll" -o \
+          -name "libbz2*.dll" -o \
+          -name "liblzma*.dll" \
         \) -exec cp -v {} rel \;
 
     - uses: actions/upload-artifact@v4
