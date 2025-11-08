@@ -46,7 +46,10 @@ jobs:
           -name "libusbmuxd*" -o \
           -name "inetcat.exe" -o \
           -name "iproxy.exe" -o \
+          -name "libirecovery*.dll" -o \
           -name "libtatsu*.dll" -o \
+          -name "libzip.dll" -o \
+          -name "libngtcp*.dll" -o \
           -name "zlib*.dll" -o \
           -name "libbrotli*.dll" -o \
           -name "libiconv*.dll" -o \
