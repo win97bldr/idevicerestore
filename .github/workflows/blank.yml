@@ -1,4 +1,4 @@
-name: Build idevicerestore for Windows
+name: Build
 
 on:
   workflow_dispatch:
@@ -8,8 +8,7 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Install MSYS2
-      uses: msys2/setup-msys2@v2
+    - uses: msys2/setup-msys2@v2
       with:
         update: true
         install: >-
@@ -21,29 +20,65 @@ jobs:
           mingw-w64-x86_64-pkg-config
           mingw-w64-x86_64-openssl
           mingw-w64-x86_64-libzip
+          mingw-w64-x86_64-curl
           mingw-w64-x86_64-libusb
 
-    - name: Clone and build dependencies
+    - name: Build
       shell: msys2 {0}
       run: |
-        repos=("libplist" "libimobiledevice-glue" "libusbmuxd" "libirecovery" "libtatsu" "libimobiledevice" "idevicerestore")
-        for repo in "${repos[@]}"; do
-          git clone "https://github.com/libimobiledevice/$repo"
-          cd "$repo"
+        set -e
+        mkdir -p rel
+        export PATH=/mingw64/bin:$PATH
+        for repo in libplist libimobiledevice-glue libusbmuxd libirecovery libimobiledevice idevicerestore; do
+          git clone --depth=1 https://github.com/libimobiledevice/$repo
+          cd $repo
           ./autogen.sh
           make -j$(nproc)
           make install
           cd ..
         done
+        find /mingw64/bin/ -type f \( \
+          -name "idevice_id.exe" \
+          -o -name "ideviceinfo.exe" \
+          -o -name "idevicebackup.exe" \
+          -o -name "idevicebackup2.exe" \
+          -o -name "idevicecrashreport.exe" \
+          -o -name "idevicedate.exe" \
+          -o -name "idevicedebug.exe" \
+          -o -name "idevicediagnostics.exe" \
+          -o -name "ideviceenterrecovery.exe" \
+          -o -name "ideviceimagemounter.exe" \
+          -o -name "idevicename.exe" \
+          -o -name "idevicenotificationproxy.exe" \
+          -o -name "idevicepair.exe" \
+          -o -name "ideviceprovision.exe" \
+          -o -name "idevicescreenshot.exe" \
+          -o -name "idevicesetlocation.exe" \
+          -o -name "idevicesyslog.exe" \
+          -o -name "ideviceunpair.exe" \
+          -o -name "idevicerestore.exe" \
+          -o -name "libcurl-*.dll" \
+          -o -name "libcrypto-*.dll" \
+          -o -name "libgcc_s_seh-1.dll" \
+          -o -name "libgnutls-*.dll" \
+          -o -name "libgpg-error-0.dll" \
+          -o -name "libhogweed-*.dll" \
+          -o -name "libiconv-2.dll" \
+          -o -name "libidn2-0.dll" \
+          -o -name "libintl-8.dll" \
+          -o -name "libnettle-*.dll" \
+          -o -name "libnghttp2-*.dll" \
+          -o -name "libp11-kit-*.dll" \
+          -o -name "libpsl-5.dll" \
+          -o -name "libssl-*.dll" \
+          -o -name "libstdc++-6.dll" \
+          -o -name "libtasn1-6.dll" \
+          -o -name "libunistring-2.dll" \
+          -o -name "libusb-1.0.dll" \
+          -o -name "libwinpthread-1.dll" \
+        \) -exec cp -v {} rel \;
 
-    - name: Package binaries
-      shell: msys2 {0}
-      run: |
-        mkdir -p rel
-        find /mingw64/bin/ -type f \( -name "idevicerestore.exe" -o -name "idevice*.exe" \) -exec cp -v {} rel \;
-
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v4
+    - uses: actions/upload-artifact@v4
       with:
         name: idevicerestore-windows
         path: rel
